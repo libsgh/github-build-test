@@ -15,6 +15,13 @@ on:
           - windows-4.0-386
           - windows-4.0-amd64
         default: linux-amd64
+      branch:
+        type: choice
+        description: 'choose build branch'
+        options:
+          - main
+          - dev
+        default: dev
   push:
     branches: [ master ]
   pull_request:
