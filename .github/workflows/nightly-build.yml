@@ -38,11 +38,11 @@ jobs:
           list=$(echo ${target} | jq -c)
           echo "::set-output name=target::${list}"
           if ${{ github.event.inputs.branch == ''}}; then
-            branch="dev"
+            branch='["dev"]'
           else
-            branch="${{ github.event.inputs.branch }}"
+            branch='["${{ github.event.inputs.branch }}"]'
           fi
-          b=$(echo ${branch})
+          b=$(echo ${branch} | jq -c)
           echo "::set-output name=branch::${b}"
 
   build:
