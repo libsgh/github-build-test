@@ -1,0 +1,65 @@
+name: PanIndex Release
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        type: choice
+        description: 'choose build target'
+        options:
+          - linux-amd64
+          - linux-386
+          - linux-arm-5
+          - linux-arm-6
+          - linux-arm-7
+          - linux-arm64
+          - windows-4.0-386
+          - windows-4.0-amd64
+        default: linux-amd64
+  push:
+    branches: [ dev ]
+  pull_request:
+    branches: [ dev ]
+jobs:
+  setup:
+    name: build setup
+    runs-on: ubuntu-latest
+    outputs:
+      target: ${{ steps.setup.outputs.target }}
+    steps:
+      - name: setup
+        id: setup
+        run: |
+          if ${{ github.event.inputs.target == ''}}; then
+            target='["linux-amd64"]'
+          else
+            target='["${{ github.event.inputs.target }}"]'
+          fi
+          list=$(echo ${target} | jq -c)
+          echo "::set-output name=target::${list}"
+  build:
+    needs: setup
+    strategy:
+      matrix:
+        target: ${{ fromJson(needs.setup.outputs.target) }}
+        go-version: [1.18]
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      #- name: Setup Go
+      #  uses: actions/setup-go@v2
+      #  with:
+      #    go-version: ${{ matrix.go-version }}
+      #- name: Checkout
+      #  uses: actions/checkout@v3
+      #  with:
+      #    persist-credentials: false
+      #    ref: dev
+      - name: Build PanIndex
+        uses: libsgh/PanIndex-build-action@main
+        with:
+          - target: ${{ matrix.target }}
+      - name: upload-PanIndex
+        uses: actions/upload-artifact@v3
+        with:
+          name: PanIndex-${{ matrix.target }}
+          path: /home/runner/work/PanIndex/PanIndex/dist/*
