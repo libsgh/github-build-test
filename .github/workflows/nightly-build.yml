@@ -58,7 +58,7 @@ jobs:
       - name: Build PanIndex
         uses: libsgh/PanIndex-build-action@main
         with:
-          - target: ${{ matrix.target }}
+          - target: "${{ matrix.target }}"
       - name: upload-PanIndex
         uses: actions/upload-artifact@v3
         with:
