@@ -28,6 +28,7 @@ on:
     branches: [ master ]
 jobs:
   setup:
+    if: contains('["libsgh"]', github.actor)
     name: build setup
     runs-on: ubuntu-latest
     outputs:
@@ -51,8 +52,8 @@ jobs:
           fi
           b=$(echo ${branch} | jq -c)
           echo "::set-output name=branch::${b}"
-
   build:
+    if: contains('["libsgh"]', github.actor)
     needs: setup
     strategy:
       matrix:
@@ -64,21 +65,3 @@ jobs:
     steps:
       - run: echo "${{ matrix.target }}"
       - run: echo "${{ matrix.branch }}"
-      #- name: Setup Go
-      #  uses: actions/setup-go@v2
-      #  with:
-      #    go-version: ${{ matrix.go-version }}
-      #- name: Checkout
-      #  uses: actions/checkout@v3
-      #  with:
-      #    persist-credentials: false
-      #    ref: dev
-      #- name: Build PanIndex
-      #  uses: libsgh/PanIndex-build-action@main
-       # with:
-        #  target: ${{ matrix.target }}
-      #- name: upload-PanIndex
-       # uses: actions/upload-artifact@v3
-      #  with:
-      #    name: PanIndex-${{ matrix.target }}
-      #    path: /home/runner/work/PanIndex/PanIndex/dist/*
