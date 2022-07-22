@@ -70,6 +70,7 @@ jobs:
         with:
           persist-credentials: false
           ref: master
+          fetch-depth: 0
       - name: "get tag"
         id: previoustag
         uses: "WyriHaximus/github-action-get-previous-tag@v1"
