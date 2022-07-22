@@ -25,6 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       target: ${{ steps.setup.outputs.target }}
+      branch: ${{ steps.setup.outputs.branch }}
     steps:
       - name: setup
         id: setup
@@ -36,16 +37,26 @@ jobs:
           fi
           list=$(echo ${target} | jq -c)
           echo "::set-output name=target::${list}"
+          if ${{ github.event.inputs.branch == ''}}; then
+            branch="dev"
+          else
+            branch="${{ github.event.inputs.branch }}"
+          fi
+          list=$(echo ${branch})
+          echo "::set-output name=branch::${list}"
+
   build:
     needs: setup
     strategy:
       matrix:
         target: ${{ fromJson(needs.setup.outputs.target) }}
+        branch: ${{ fromJson(needs.setup.outputs.branch) }}
         go-version: [1.18]
     name: build
     runs-on: ubuntu-latest
     steps:
       - run: echo "${{ matrix.target }}"
+      - run: echo "${{ matrix.branch }}"
       #- name: Setup Go
       #  uses: actions/setup-go@v2
       #  with:
@@ -55,12 +66,12 @@ jobs:
       #  with:
       #    persist-credentials: false
       #    ref: dev
-      - name: Build PanIndex
-        uses: libsgh/PanIndex-build-action@main
-        with:
-          target: ${{ matrix.target }}
-      - name: upload-PanIndex
-        uses: actions/upload-artifact@v3
-        with:
-          name: PanIndex-${{ matrix.target }}
-          path: /home/runner/work/PanIndex/PanIndex/dist/*
+      #- name: Build PanIndex
+      #  uses: libsgh/PanIndex-build-action@main
+       # with:
+        #  target: ${{ matrix.target }}
+      #- name: upload-PanIndex
+       # uses: actions/upload-artifact@v3
+      #  with:
+      #    name: PanIndex-${{ matrix.target }}
+      #    path: /home/runner/work/PanIndex/PanIndex/dist/*
