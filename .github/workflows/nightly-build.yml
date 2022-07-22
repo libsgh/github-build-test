@@ -45,6 +45,7 @@ jobs:
     name: build
     runs-on: ubuntu-latest
     steps:
+      - run: echo "${{ matrix.target }}"
       #- name: Setup Go
       #  uses: actions/setup-go@v2
       #  with:
