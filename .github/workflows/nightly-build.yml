@@ -67,9 +67,6 @@ jobs:
       - run: echo "${{ matrix.branch }}"
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          persist-credentials: false
-          ref: master
       - name: 'Get Previous tag'
           id: previoustag
           uses: "WyriHaximus/github-action-get-previous-tag@v1"
