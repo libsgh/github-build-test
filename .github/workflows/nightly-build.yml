@@ -42,8 +42,8 @@ jobs:
           else
             branch="${{ github.event.inputs.branch }}"
           fi
-          list=$(echo ${branch})
-          echo "::set-output name=branch::${list}"
+          b=$(echo ${branch})
+          echo "::set-output name=branch::${b}"
 
   build:
     needs: setup
