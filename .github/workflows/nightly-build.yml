@@ -70,4 +70,7 @@ jobs:
         with:
           persist-credentials: false
           ref: master
-      - run: echo "${{ github.event.release.tag_name }}"
+      - name: 'Get Previous tag'
+          id: previoustag
+          uses: "WyriHaximus/github-action-get-previous-tag@v1"
+      - run: echo "${{ steps.previoustag.outputs.tag }}"
